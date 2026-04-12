@@ -1,0 +1,11 @@
+*.pmtiles
+*.pbf
+**/tmp/
+**/.venv/
+**/node_modules/
+planetiler.jar
+pmtiles
+pmtiles*:Zone.Identifier
+data/package.json
+data/package-lock.json
+config.yaml

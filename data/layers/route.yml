@@ -1,0 +1,233 @@
+---
+schema_name: OSM US Canoe Routes
+schema_description: Canoe routes, water trails, and related points of interest.
+attribution: <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
+sources:
+  osm:
+    type: osm
+    local_path: data/sources/maine-latest.osm.pbf
+layers:
+  - id: canoe_route
+    features:
+      - source: osm
+        geometry: relation_members
+        min_zoom: 5
+        min_size: 1
+        include_when: &canoe_route_filter
+          - __all__:
+            - route: canoe
+            - __any__:
+              - waterway: __any__
+              - highway: __any__
+        attributes: &canoe_route_attributes
+          - key: access
+            tag_value: access
+          - key: atv
+            tag_value: atv
+          - key: bicycle
+            tag_value: bicycle
+          - key: boat
+            tag_value: boat
+          - key: bridge
+            tag_value: bridge
+          - key: canoe
+            tag_value: canoe
+          - key: check_date
+            tag_value: check_date
+          - key: covered
+            tag_value: covered
+          - key: dog
+            tag_value: dog
+          - key: fixme
+            tag_value: fixme
+          - key: FIXME
+            tag_value: FIXME
+          - key: foot
+            tag_value: foot
+          - key: ford
+            tag_value: ford
+          - key: hand_cart
+            tag_value: hand_cart
+          - key: highway
+            tag_value: highway
+          - key: hiking
+            tag_value: hiking
+          - key: horse
+            tag_value: horse
+          - key: incline
+            tag_value: incline
+          - key: informal
+            tag_value: informal
+          - key: inline_skates
+            tag_value: inline_skates
+          - key: intermittent
+            tag_value: intermittent
+          - key: lit
+            tag_value: lit
+          - key: lock
+            tag_value: lock
+          - key: maxspeed
+            tag_value: maxspeed
+          - key: maxspeed:atv
+            tag_value: maxspeed:atv
+          - key: maxspeed:bicycle
+            tag_value: maxspeed:bicycle
+          - key: maxspeed:horse
+            tag_value: maxspeed:horse
+          - key: maxspeed:motor_vehicle
+            tag_value: maxspeed:motor_vehicle
+          - key: maxspeed:snowmobile
+            tag_value: maxspeed:snowmobile
+          - key: maxspeed:vehicle
+            tag_value: maxspeed:vehicle
+          - key: motorboat
+            tag_value: motorboat
+          - key: motor_vehicle
+            tag_value: motor_vehicle
+          - key: mtb
+            tag_value: mtb
+          - key: mtb:name
+            tag_value: mtb:name
+          - key: mtb:scale
+            tag_value: mtb:scale
+          - key: mtb:scale:imba
+            tag_value: mtb:scale:imba
+          - key: mtb:scale:uphill
+            tag_value: mtb:scale:uphill
+          - key: mtb:type
+            tag_value: mtb:type
+          - key: name
+            tag_value: name
+          - key: noname
+            tag_value: noname
+          - key: oneway
+            tag_value: oneway
+          - key: oneway:atv
+            tag_value: oneway:atv
+          - key: oneway:boat
+            tag_value: oneway:boat
+          - key: oneway:bicycle
+            tag_value: oneway:bicycle
+          - key: oneway:canoe
+            tag_value: oneway:canoe
+          - key: oneway:foot
+            tag_value: oneway:foot
+          - key: oneway:horse
+            tag_value: oneway:horse
+          - key: oneway:inline_skates
+            tag_value: oneway:inline_skates
+          - key: oneway:motor_vehicle
+            tag_value: oneway:motor_vehicle
+          - key: oneway:mtb
+            tag_value: oneway:mtb
+          - key: oneway:portage
+            tag_value: oneway:portage
+          - key: oneway:ski
+            tag_value: oneway:ski
+          - key: oneway:ski:nordic
+            tag_value: oneway:ski:nordic
+          - key: oneway:snowmobile
+            tag_value: oneway:snowmobile
+          - key: oneway:vehicle
+            tag_value: oneway:vehicle
+          - key: oneway:wheelchair
+            tag_value: oneway:wheelchair
+          - key: oneway:conditional
+            tag_value: oneway:conditional
+          - key: oneway:atv:conditional
+            tag_value: oneway:atv:conditional
+          - key: oneway:boat:conditional
+            tag_value: oneway:boat:conditional
+          - key: oneway:bicycle:conditional
+            tag_value: oneway:bicycle:conditional
+          - key: oneway:canoe:conditional
+            tag_value: oneway:canoe:conditional
+          - key: oneway:foot:conditional
+            tag_value: oneway:foot:conditional
+          - key: oneway:horse:conditional
+            tag_value: oneway:horse:conditional
+          - key: oneway:inline_skates:conditional
+            tag_value: oneway:inline_skates:conditional
+          - key: oneway:motor_vehicle:conditional
+            tag_value: oneway:motor_vehicle:conditional
+          - key: oneway:portage:conditional
+            tag_value: oneway:portage:conditional
+          - key: oneway:mtb:conditional
+            tag_value: oneway:mtb:conditional
+          - key: oneway:ski:conditional
+            tag_value: oneway:ski:conditional
+          - key: oneway:ski:nordic:conditional
+            tag_value: oneway:ski:nordic:conditional
+          - key: oneway:snowmobile:conditional
+            tag_value: oneway:snowmobile:conditional
+          - key: oneway:vehicle:conditional
+            tag_value: oneway:vehicle:conditional
+          - key: oneway:wheelchair:conditional
+            tag_value: oneway:wheelchair:conditional
+          - key: open_water
+            tag_value: open_water
+          - key: operator
+            tag_value: operator
+          - key: piste:type
+            tag_value: piste:type
+          - key: portage
+            tag_value: portage
+          - key: ramp:bicycle
+            tag_value: ramp:bicycle
+          - key: ramp:wheelchair
+            tag_value: ramp:wheelchair
+          - key: rapids
+            tag_value: rapids
+          - key: route
+            tag_value: route
+          - key: sac_scale
+            tag_value: sac_scale
+          - key: sailboat
+            tag_value: sailboat
+          - key: sea_kayak
+            tag_value: sea_kayak
+          - key: ship
+            tag_value: ship
+          - key: ski:nordic
+            tag_value: ski:nordic
+          - key: smoothness
+            tag_value: smoothness
+          - key: snowmobile
+            tag_value: snowmobile
+          - key: surface
+            tag_value: surface
+          - key: survey:date
+            tag_value: survey:date
+          - key: symbol
+            tag_value: symbol
+          - key: tidal
+            tag_value: tidal
+          - key: todo
+            tag_value: todo
+          - key: TODO
+            tag_value: TODO
+          - key: toll
+            tag_value: toll
+          - key: tracktype
+            tag_value: tracktype
+          - key: trail_visibility
+            tag_value: trail_visibility
+          - key: trailblazed
+            tag_value: trailblazed
+          - key: tunnel
+            tag_value: tunnel
+          - key: vehicle
+            tag_value: vehicle
+          - key: waterbody:name
+            tag_value: waterbody:name
+          - key: waterway
+            tag_value: waterway
+          - key: wheelchair
+            tag_value: wheelchair
+          - key: width
+            tag_value: width
+
+args:
+  area:
+    description: Geofabrik area to download
+    default: rhode-island
