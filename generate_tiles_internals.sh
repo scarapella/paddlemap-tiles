@@ -10,8 +10,9 @@ git pull
 # 4 - destination bucket for pmtiles gs://na-ne2-openpaddlemap-tiles
 gcloud storage cp $1/$2 data/sources
 
+CONTAINER_ENGINE=${CONTAINER_ENGINE:-"podman"}
 
-podman run -e JAVA_TOOL_OPTIONS='-Xmx60g' \
+$CONTAINER_ENGINE run -e JAVA_TOOL_OPTIONS='-Xmx60g' \
 -v "$(pwd)/data":/data \
 ghcr.io/onthegomap/planetiler generate-custom \
 --osm-path=data/sources/$2 \
