@@ -23,6 +23,9 @@ if [ "$EXECUTION_MODE" == "docker" ]; then
   if [ -n "$JAVA_ARGS" ]; then
     JAVA_CONTAINER_OPTS="-e JAVA_TOOL_OPTIONS='$JAVA_ARGS'"
   fi
+  $CONTAINER_ENGINE run $JAVA_CONTAINER_OPTS \
+  -v "$(pwd)/data":/data \
+  ghcr.io/onthegomap/planetiler generate-custom $PLANETILER_ARGS 
 else [ "$EXECUTION_MODE" == "java" ]; then
   java planentiler.jar $JAVA_ARGS $PLANETILER_ARGS
 else
