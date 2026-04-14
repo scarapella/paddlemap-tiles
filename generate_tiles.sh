@@ -11,7 +11,7 @@ cd "$(dirname "$0")"
 ./generate_tiles_internals.sh $@
 
 #cleanup
-gcloud storage cp *.out $4logs/
+gcloud storage cp *.out $4/logs/
 rm  data/sources/$2
 rm  data/$3.pmtiles
 rm  -rf data/tmp
