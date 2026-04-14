@@ -27,7 +27,7 @@ if [ "$EXECUTION_MODE" == "docker" ]; then
   -v "$(pwd)/data":/data \
   ghcr.io/onthegomap/planetiler generate-custom $PLANETILER_ARGS 
 elif [ "$EXECUTION_MODE" == "java" ]; then
-   java -jar planentiler.jar $JAVA_ARGS $PLANETILER_ARGS
+   java -jar planetiler.jar $JAVA_ARGS $PLANETILER_ARGS
 else
   "Unknown execution mode: EXECUTION_MODE=$EXECUTION_MODE" >&2
   exit 1
