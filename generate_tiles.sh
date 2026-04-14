@@ -12,6 +12,7 @@ usage() {
   echo "  --pbf-region=PBF_REGION" >&2
   echo "  --schema=SCHEMA" >&2
   echo "  --tiles-bucket-path=TILES_BUCKET_PATH" >&2
+  echo "  --execution-mode=java|docker" >&2
   echo "  --container-engine=podman|docker" >&2
   echo "Example: $0" >&2
   echo "  --java-args='-Dhi=mom -Xmx60g'" >&2
@@ -19,7 +20,7 @@ usage() {
   echo "  --pbf-region=north-america-latest" >&2
   echo "  --schema=waterways" >&2
   echo "  --tiles-bucket-path=gs://na-ne2-openpaddlemap-tiles" >&2
-  echo "  --container-engine=podman" >&2
+  echo "  --execution-mode=java" >&2
   exit 1
 }
 
@@ -47,6 +48,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --container-engine=*)
       CONTAINER_ENGINE="${1#*=}"
+      shift
+      ;;
+    --execution-mode=*)
+      EXECUTION_MODE="${1#*=}"
       shift
       ;;
     -h|--help)
@@ -79,7 +84,9 @@ export TILES_BUCKET_PATH=${TILES_BUCKET_PATH:-gs://na-ne2-openpaddlemap-tiles/ti
 export PBF_NAME=$PBF_BUCKET_PATH/$(basename $PBF_REGION)-latest.osm.pbf
 
 
-CONTAINER_ENGINE=${CONTAINER_ENGINE:-podman}
+export CONTAINER_ENGINE=${CONTAINER_ENGINE:-podman}
+export EXECUTION_MODE=${EXECUTION_MODE:-java}
+
 
 ./generate_tiles_internals.sh $@
 
