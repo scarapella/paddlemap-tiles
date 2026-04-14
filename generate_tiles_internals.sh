@@ -12,8 +12,8 @@ CONTAINER_ENGINE=${CONTAINER_ENGINE:-"podman"}
 
 PLANETILER_ARGS="generate-custom \
 --osm-path=data/sources/$PBF_NAME \
---schema=/data/layers/$SCHEMA.yml \
---output=/data/$SCHEMA.pmtiles \
+--schema=data/layers/$SCHEMA.yml \
+--output=data/$SCHEMA.pmtiles \
 --storage=RAM --force" 
 
 
