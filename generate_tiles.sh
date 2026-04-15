@@ -82,6 +82,7 @@ export PBF_NAME=$PBF_BUCKET_PATH/$(basename $PBF_REGION)-latest.osm.pbf
 CONTAINER_ENGINE=${CONTAINER_ENGINE:-podman}
 
 ./generate_tiles_internals.sh $@
+EXIT_STATUS=$?
 
 #cleanup
 if [ -f *.out ]
@@ -92,3 +93,4 @@ rm  data/sources/$PBF_NAME
 rm  data/$SCHEMA.pmtiles
 rm  -rf data/tmp
 
+exit $EXIT_STATUS
