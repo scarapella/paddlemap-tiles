@@ -8,13 +8,13 @@ usage() {
   echo "Usage: $0" >&2
   echo "  --tiles-source-bucket-path=TILES_SOURCE_BUCKET_PATH" >&2 
   echo "  --pmtiles-file=PMTILES_FILE" >&2
-  echo "  --tiles-bucket-path=TILES_BUCKET_PATH" >&2
+  echo "  --merged-tiles-bucket-path=MERGED_TILES_BUCKET_PATH" >&2
   echo "  [--pbf-region=PBF_REGION,PBF_REGION...] #if empty will default to all findable regions" >&2
   echo "  [--working-dir=WORKING_DIR]" >&2
   echo "Example: $0" >&2
   echo "  --tiles-source-bucket-path=gs://na-ne2-paddlemap-rawdata" >&2
   echo "  --pmtiles-file=waterways.pmtiles" >&2
-  echo "  --tiles-bucket-path=gs://na-ne2-paddlemap-tiles" >&2
+  echo "  --merged-tiles-bucket-path=gs://na-ne2-paddlemap-tiles" >&2
   exit 1
 }
 
@@ -28,8 +28,8 @@ while [[ $# -gt 0 ]]; do
       TILES_SOURCE_BUCKET_PATH="${1#*=}"
       shift
       ;;
-    --tiles-bucket-path=*)
-      TILES_BUCKET_PATH="${1#*=}"
+    --merged-tiles-bucket-path=*)
+      MERGED_TILES_BUCKET_PATH="${1#*=}"
       shift
       ;;
     --pbf-region=*)
@@ -59,12 +59,12 @@ done
 
 #setup common exports for generate_tiles_internals
 WORKING_DIR=${WORKING_DIR:-tmp-tiles}
-TILES_BUCKET_PATH=${TILES_BUCKET_PATH:-}
+MERGED_TILES_BUCKET_PATH=${MERGED_TILES_BUCKET_PATH:-}
 PMTILES_FILE=${PMTILES_FILE:-waterways.pmtiles}
 TILES_SOURCE_BUCKET_PATH=${TILES_SOURCE_BUCKET_PATH:-}
 
-if [ -z "$TILES_SOURCE_BUCKET_PATH" ] || [ -z "$PMTILES_FILE" ] || [ -z "$TILES_BUCKET_PATH" ]; then
-  echo "Error: --tiles-source-bucket-path, --pmtiles-file, and --tiles-bucket-path are required" >&2
+if [ -z "$TILES_SOURCE_BUCKET_PATH" ] || [ -z "$PMTILES_FILE" ] || [ -z "$MERGED_TILES_BUCKET_PATH" ]; then
+  echo "Error: --tiles-source-bucket-path, --pmtiles-file, and --merged-tiles-bucket-path are required" >&2
   usage
 fi
 
@@ -90,8 +90,8 @@ fi
 echo generating merged pmtiles file with tile-join
 find $WORKING_DIR -type f -name "$PMTILES_FILE" -exec tile-join -o $WORKING_DIR/$PMTILES_FILE {} +
 
-echo uploading merged pmtiles file to $TILES_BUCKET_PATH/$PMTILES_FILE
-gcloud storage cp $WORKING_DIR/$PMTILES_FILE $TILES_BUCKET_PATH/$PMTILES_FILE
+echo uploading merged pmtiles file to $MERGED_TILES_BUCKET_PATH/$PMTILES_FILE
+gcloud storage cp $WORKING_DIR/$PMTILES_FILE $MERGED_TILES_BUCKET_PATH/$PMTILES_FILE
 
 rm -rf $WORKING_DIR
 
