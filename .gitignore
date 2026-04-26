@@ -1,4 +1,5 @@
 *.pmtiles
+*.pmtiles-journal
 *.pbf
 **/tmp/
 **/.venv/
@@ -9,3 +10,4 @@ pmtiles*:Zone.Identifier
 data/package.json
 data/package-lock.json
 config.yaml
+**/tmp-tiles/
