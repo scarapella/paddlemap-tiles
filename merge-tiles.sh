@@ -92,3 +92,6 @@ find $WORKING_DIR -type f -name "$PMTILES_FILE" -exec tile-join -o $WORKING_DIR/
 
 echo uploading merged pmtiles file to $TILES_BUCKET_PATH/$PMTILES_FILE
 gcloud storage cp $WORKING_DIR/$PMTILES_FILE $TILES_BUCKET_PATH/$PMTILES_FILE
+
+rm -rf $WORKING_DIR
+
