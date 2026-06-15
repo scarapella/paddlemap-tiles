@@ -467,6 +467,7 @@ layers:
             - dam
             - waterfall
             - weir
+            - rapids
         attributes: *poi_attributes
       - source: osm
         geometry: line_midpoint
