@@ -204,6 +204,8 @@ layers:
             tag_value: ramp:wheelchair
           - key: rapids
             tag_value: rapids
+          - key: rapids:name
+            tag_value: rapids:name
           - key: route
             tag_value: route
           - key: sac_scale
