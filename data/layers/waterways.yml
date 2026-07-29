@@ -14,10 +14,13 @@ layers:
         min_zoom: 5
         min_size: 1
         include_when: &trails_filter
-          # gather any potrtages
-          - __all__:
+          # gather any portages
+          - __any__:
             - __all__:
               - highway: __any__
+              - portage: __any__
+            - __all__:
+              - man_made: pier
               - portage: __any__
           # gather waterways big waterways
           - __all__:
