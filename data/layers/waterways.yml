@@ -79,6 +79,8 @@ layers:
             tag_value: hand_cart
           - key: highway
             tag_value: highway
+          - key: man_made
+            tag_value: man_made
           - key: hiking
             tag_value: hiking
           - key: horse
