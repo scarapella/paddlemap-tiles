@@ -22,6 +22,11 @@ layers:
             - __all__:
               - man_made: pier
               - portage: __any__
+            - __all__:
+              - railway: __any__
+              - __any__:
+                - canoe: __any__
+                - portage: __any__
           # gather waterways big waterways
           - __all__:
             - waterway:
@@ -81,6 +86,8 @@ layers:
             tag_value: highway
           - key: man_made
             tag_value: man_made
+          - key: railway
+            tag_value: railway
           - key: hiking
             tag_value: hiking
           - key: horse
