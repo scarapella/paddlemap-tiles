@@ -13,6 +13,7 @@ usage() {
   echo "  [--execution-mode=java|docker]" >&2
   echo "  [--container-engine=podman|docker]" >&2
   echo "  [--java-args=JAVA_ARGS]" >&2
+  echo "  [--skip-if-newer]" >&2
   echo "Example: $0" >&2
   echo "  --pbf-bucket-path=gs://na-ne2-openpaddlemap-rawdata" >&2
   echo "  --pbf-region=north-america" >&2
@@ -53,6 +54,10 @@ while [[ $# -gt 0 ]]; do
       CONTAINER_ENGINE="${1#*=}"
       shift
       ;;
+    --skip-if-newer)
+      SKIP_IF_NEWER=true
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -79,6 +84,7 @@ export SCHEMA=${SCHEMA:-waterways}
 
 export CONTAINER_ENGINE=${CONTAINER_ENGINE:-podman}
 export EXECUTION_MODE=${EXECUTION_MODE:-java}
+export SKIP_IF_NEWER=${SKIP_IF_NEWER:-false}
 
 if [ -z "$PBF_REGIONS" ] || [ -z "$SCHEMA" ] || [ -z "$BASE_TILES_BUCKET_PATH" ] || [ -z "$PBF_BUCKET_PATH" ]; then
   echo "Error: --pbf-region, --schema, --tiles-bucket-path, and --pbf-bucket-path are required" >&2
@@ -114,8 +120,8 @@ for PBF_REGION in "${PBF_REGION_LIST[@]}"; do
     echo "Error: generate_tiles_internals.sh failed for region $PBF_REGION with schema $SCHEMA" >&2
     exit $EXIT_STATUS
   fi
-  rm  data/sources/$PBF_FILE
-  rm  data/$SCHEMA.pmtiles
+  rm -f data/sources/$PBF_FILE
+  rm -f data/$SCHEMA.pmtiles
   rm  -rf data/tmp
 done
 
