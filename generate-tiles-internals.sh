@@ -6,6 +6,19 @@ set -ex
 cd "$(dirname "$0")"
 git pull
 
+TILES_OBJECT="${TILES_BUCKET_PATH%/}/$SCHEMA.pmtiles"
+if [ "$SKIP_IF_NEWER" = true ]; then
+  PBF_UPDATE_TIME=$(gcloud storage objects describe "$PBF_NAME" --format='value(updated)')
+  if TILES_UPDATE_TIME=$(gcloud storage objects describe "$TILES_OBJECT" --format='value(updated)' 2>/dev/null); then
+    PBF_UPDATE_EPOCH=$(date -d "$PBF_UPDATE_TIME" +%s%N)
+    TILES_UPDATE_EPOCH=$(date -d "$TILES_UPDATE_TIME" +%s%N)
+    if [[ "$PBF_UPDATE_EPOCH" -le "$TILES_UPDATE_EPOCH" ]]; then
+      echo "Skipping generation: $TILES_OBJECT is up to date with $PBF_NAME"
+      exit 0
+    fi
+  fi
+fi
+
 gcloud storage cp $PBF_NAME data/sources
 
 CONTAINER_ENGINE=${CONTAINER_ENGINE:-"podman"}
@@ -33,5 +46,5 @@ else
   exit 1
 fi
     
-echo "Uploading data/$SCHEMA.pmtiles  to $TILES_BUCKET_PATH"
-gcloud storage cp data/$SCHEMA.pmtiles $TILES_BUCKET_PATH/
+echo "Uploading data/$SCHEMA.pmtiles to $TILES_OBJECT"
+gcloud storage cp data/$SCHEMA.pmtiles "$TILES_OBJECT"
