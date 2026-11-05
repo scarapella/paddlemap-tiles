@@ -11,6 +11,7 @@ usage() {
   echo "  --tiles-bucket-path=TILES_BUCKET_PATH" >&2
   echo "  [--pbf-region=PBF_REGION,PBF_REGION...] #if empty will default to all findable regions" >&2
   echo "  [--working-dir=WORKING_DIR]" >&2
+  echo "  [--skip-if-newer]" >&2
   echo "Example: $0" >&2
   echo "  --tiles-source-bucket-path=gs://na-ne2-paddlemap-rawdata" >&2
   echo "  --pmtiles-file=waterways.pmtiles" >&2
@@ -38,6 +39,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --working-dir=*)
       WORKING_DIR="${1#*=}"
+      shift
+      ;;
+    --skip-if-newer)
+      SKIP_IF_NEWER=true
       shift
       ;;
     -h|--help)
@@ -68,10 +73,53 @@ if [ -z "$TILES_SOURCE_BUCKET_PATH" ] || [ -z "$PMTILES_FILE" ] || [ -z "$TILES_
   usage
 fi
 
-rm -rf $WORKING_DIR
-mkdir -p $WORKING_DIR
-
 IFS=',' read -ra PBF_REGION_LIST <<< "$PBF_REGIONS"
+
+if [ "$SKIP_IF_NEWER" = true ]; then
+  TILES_OBJECT="${TILES_BUCKET_PATH%/}/$PMTILES_FILE"
+  SOURCE_ROOT="${TILES_SOURCE_BUCKET_PATH%/}"
+  SOURCE_OBJECTS=()
+
+  if [ ${#PBF_REGION_LIST[@]} -gt 0 ]; then
+    for PBF_REGION in "${PBF_REGION_LIST[@]}"; do
+      SOURCE_OBJECTS+=("$SOURCE_ROOT/$PBF_REGION/$PMTILES_FILE")
+    done
+  else
+    SOURCE_LIST=$(gcloud storage ls -r "$SOURCE_ROOT/**")
+    while IFS= read -r SOURCE_OBJECT; do
+      if [[ "${SOURCE_OBJECT##*/}" == "$PMTILES_FILE" ]]; then
+        SOURCE_OBJECTS+=("$SOURCE_OBJECT")
+      fi
+    done <<< "$SOURCE_LIST"
+  fi
+
+  if [ ${#SOURCE_OBJECTS[@]} -eq 0 ]; then
+    echo "Error: No source objects found for $PMTILES_FILE under $SOURCE_ROOT" >&2
+    exit 1
+  fi
+
+  TILES_UPDATE_TIME=$(gcloud storage objects describe "$TILES_OBJECT" --format='value(update_time)' 2>/dev/null || true)
+  if [ -n "$TILES_UPDATE_TIME" ]; then
+    TILES_UPDATE_EPOCH=$(date -d "$TILES_UPDATE_TIME" +%s%N)
+    ALL_SOURCES_CURRENT=true
+    for SOURCE_OBJECT in "${SOURCE_OBJECTS[@]}"; do
+      SOURCE_UPDATE_TIME=$(gcloud storage objects describe "$SOURCE_OBJECT" --format='value(update_time)')
+      SOURCE_UPDATE_EPOCH=$(date -d "$SOURCE_UPDATE_TIME" +%s%N)
+      if [[ "$SOURCE_UPDATE_EPOCH" -gt "$TILES_UPDATE_EPOCH" ]]; then
+        ALL_SOURCES_CURRENT=false
+        break
+      fi
+    done
+
+    if [ "$ALL_SOURCES_CURRENT" = true ]; then
+      echo "Skipping merge: $TILES_OBJECT is up to date with all source objects"
+      exit 0
+    fi
+  fi
+fi
+
+rm -rf "$WORKING_DIR"
+mkdir -p "$WORKING_DIR"
 
 if [ ${#PBF_REGION_LIST[@]} -gt 0 ]; then
   for PBF_REGION in "${PBF_REGION_LIST[@]}"; do
